@@ -4,12 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-dev": "cross-env NODE_ENV=development nodemon",
+    "test": "jest --config jest.config.ts --runInBand --no-cache --detectOpenHandles",
+    "pretty": "prettier --write \"src/**/*.ts\"",
+    "build": "tsc",
+    "lint": "tsc -noEmit",
+    "start-production": "pm2 start pm2.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",
     "ts-jest": "^29.1.2",
