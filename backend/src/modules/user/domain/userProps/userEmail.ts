@@ -37,7 +37,6 @@ export class UserEmail extends ValueObject<UserEmailProps> {
     //sanitize email
     const sanitizedEmail = TextUtils.sanitize(props.email)
 
-    console.log(sanitizedEmail)
     // Check if value is null
     const propsResult = Guard.againstNullOrUndefined(sanitizedEmail, "email");
     if (propsResult.isLeft()) {

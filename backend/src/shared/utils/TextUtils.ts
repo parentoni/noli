@@ -13,4 +13,18 @@ export class TextUtils {
       return ''
     }
   }
+
+  /**
+   * Apply trim to a string, on error return empty string
+   * @param {string} s - string to trim 
+   *
+   * @author Arthur Parentoni Guimaraes <parentoni.arthur@gmail.com>
+   */
+  public static trim(s:string):string {
+    try {
+      return s.trim()
+    } catch {
+      return ''
+    }
+  }
 }
