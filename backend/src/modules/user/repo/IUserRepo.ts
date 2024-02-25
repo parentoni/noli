@@ -10,5 +10,6 @@ import { User } from "../domain/user";
  */
 export interface IUserRepo {
   upsert(user: User): Promise<Either<CommonUseCaseResult.UnexpectedError, null>>
-    
+  findByEmail(email: string): Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, User | null>>
+  findById(id: string): Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, User | null>>
 }

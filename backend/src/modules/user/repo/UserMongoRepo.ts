@@ -36,4 +36,63 @@ export class UserRepoMongo implements IUserRepo {
   }
 
 
+  /**
+   * Finds a user by email.
+   * @param {string} email 
+   *
+   * @author Arthur Parentoni Guimaraes <parentoni.arthur@gmail.com>
+   */
+  async findByEmail(email: string): Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, User | null>> {
+    try {
+
+      // Finds the user by email
+      const user = await UserModel.findOne({ email: email })
+      if (user) {
+
+        // Maps the user to a domain user
+        const mappedUser = UserMapper.toDomain(user)
+        if (mappedUser.isLeft()) {
+          return left(mappedUser.value)
+        }
+
+        // Returns an user entity if user found and successfully mapped
+        return right(mappedUser.value)
+      }
+
+      // Returns null if the user is not found
+      return right(null)
+    } catch (error) {
+      return left(CommonUseCaseResult.UnexpectedError.create(error))
+    }
+  }
+
+  /**
+   * Finds a user by id.
+   * @param {string} id 
+   *
+   * @author Arthur Parentoni Guimaraes <parentoni.arthur@gmail.com>
+   */
+  async findById(id: string): Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, User | null>> {
+    try {
+
+      // Finds the user by id
+      const user = await UserModel.findOne({ _id: id })
+      if (user) {
+
+        // Maps the user to a domain user
+        const mappedUser = UserMapper.toDomain(user)
+        if (mappedUser.isLeft()) {
+          return left(mappedUser.value)
+        }
+        
+        // Returns an user entity if user found and successfully mapped
+        return right(mappedUser.value)
+      }
+
+      // Returns null if the user is not found and no error occurred
+      return right(null)
+    } catch (error) {
+      return left(CommonUseCaseResult.UnexpectedError.create(error))
+    }
+  }
 }
