@@ -2,6 +2,7 @@ import { Guard } from "../../../shared/core/Guard";
 import { CommonUseCaseResult } from "../../../shared/core/response/useCaseError";
 import { Either, left, right} from "../../../shared/core/result";
 import { AggregateRoot } from "../../../shared/domain/AggregateRoot";
+import { UniqueGlobalId } from "../../../shared/domain/UniqueGlobalD";
 import { UserEmail } from "./userProps/userEmail";
 import { UserName } from "./userProps/userName";
 import { UserPassword } from "./userProps/userPassword";
@@ -42,8 +43,8 @@ export class User extends AggregateRoot<UserProps> {
    *
    * @author Arthur Parentoni Guimaraes <parentoni.arthur@gmail.com>
    */
-  private constructor(props: UserProps) { 
-    super(props)
+  private constructor(props: UserProps, id?: UniqueGlobalId | undefined) { 
+    super(props, id)
   }
   
   /**
@@ -51,7 +52,7 @@ export class User extends AggregateRoot<UserProps> {
    * @param {UserProps} props 
    * @returns {User}
    */
-  public static create(props: UserProps): Either<CommonUseCaseResult.InvalidValue, User> {
+  public static create(props: UserProps, id?: UniqueGlobalId | undefined): Either<CommonUseCaseResult.InvalidValue, User> {
    
     //Validate user props
     const guardResult =  Guard.againstNullOrUndefinedBulk([
@@ -64,7 +65,7 @@ export class User extends AggregateRoot<UserProps> {
     }
 
     // If successful, return right with a new user
-    return right(new User(props)) 
+    return right(new User(props, id)) 
 
   }
 }
