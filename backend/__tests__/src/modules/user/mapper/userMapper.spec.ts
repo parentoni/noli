@@ -4,7 +4,7 @@ import { UserEmail } from '../../../../../src/modules/user/domain/userProps/user
 import { UserName } from '../../../../../src/modules/user/domain/userProps/userName';
 import { UserMapper } from '../../../../../src/modules/user/mappers/userMapper';
 
-const createMockEntityUser = () => {
+export const createMockEntityUser = () => {
   const email = UserEmail.create({email: 'apg@gmail.com'}).getRight()
   const password = UserPassword.create({password: '123456', hashed: false}).getRight()
   const name = UserName.create({name: 'Arthur'}).getRight()
@@ -12,7 +12,7 @@ const createMockEntityUser = () => {
   return User.create({email, password, name}).getRight()
 }
 
-const createMockPersistentUser = () => {
+export const createMockPersistentUser = () => {
   return {
     _id: '123',
     email: 'apg@gmail.com',
@@ -65,6 +65,7 @@ describe('User Mapper', () => {
     
     if (entityUsers[0]) {
       expect(entityUsers[0]).toStrictEqual(firstEntityUser)
+
     }
     expect(entityUsers.length).toBe(2)
   })

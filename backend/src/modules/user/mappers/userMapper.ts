@@ -86,7 +86,7 @@ export class UserMapper {
   }
 
   /**
-   * Maps a list of persistent users to a list of entity users
+   * Maps a list of persistent users to a list of users
    * @param {IUser[]} users 
    * @returns {User[]} 
    */

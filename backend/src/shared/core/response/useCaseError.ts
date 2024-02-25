@@ -65,7 +65,6 @@ export namespace CommonUseCaseResult {
         statusCode: 500
       });
       console.log(`[AppError]: An unexpected error occurred`);
-      console.error(err);
     }
     public static create(err: any): UnexpectedError {
       return new UnexpectedError(err);
