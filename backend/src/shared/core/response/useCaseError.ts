@@ -87,4 +87,22 @@ export namespace CommonUseCaseResult {
       return new Forbidden(props);
     }
   }
+
+  export class Unathorized extends BaseError<ICommonInvalidValue> {
+    public constructor(props: ICommonInvalidValueProps) {
+      super({
+        errorMessage: props.errorMessage,
+        code: `UNATHORIZED_${props.variable.toUpperCase()}`,
+        location: props.location,
+        variable: props.variable,
+        printableErrorMessage: props.printableErrorMessage,
+        statusCode: 401
+      });
+    }
+
+    public static create(props: ICommonInvalidValueProps): Unathorized {
+      return new Unathorized(props);
+    }
+  }
+
 }

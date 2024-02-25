@@ -115,4 +115,5 @@ describe("Monog implementation of user repo", () => {
       expect(result.isLeft()).toBe(true)
     })
   })
+
 });
