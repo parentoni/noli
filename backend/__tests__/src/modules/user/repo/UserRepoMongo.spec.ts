@@ -3,7 +3,7 @@ import { createMockEntityUser } from '../mapper/userMapper.spec';
 import { UserModel } from '../../../../../src/shared/infra/database/models/User';
 import { UserMapper } from '../../../../../src/modules/user/mappers/userMapper';
 import { UserRepoMongo } from '../../../../../src/modules/user/repo/UserMongoRepo';
-const userRepo = new UserRepoMongo()
+export const userRepo = new UserRepoMongo()
 
 describe("Monog implementation of user repo", () => {
 

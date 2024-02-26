@@ -1,7 +1,7 @@
 import { JWTAuth } from '../../../../../src/modules/user/services/JWTAuth'
 
 const testSecret = 'VXlbZdZiDctgU7vSvsFAzevsIcqET82lJJhWMdVIopc='
-const authService = new JWTAuth(testSecret)
+export const authService = new JWTAuth(testSecret)
 
 const testPayload = { id: '123', email: 'apg@gmail.com'}
 describe('JWTAuth service', () => {
