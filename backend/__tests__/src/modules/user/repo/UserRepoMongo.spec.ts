@@ -5,7 +5,7 @@ import { UserMapper } from '../../../../../src/modules/user/mappers/userMapper';
 import { UserRepoMongo } from '../../../../../src/modules/user/repo/UserMongoRepo';
 export const userRepo = new UserRepoMongo()
 
-describe("Monog implementation of user repo", () => {
+describe("Mongo implementation of user repo", () => {
 
 
   // Connect to a new in-memory database before running any tests.

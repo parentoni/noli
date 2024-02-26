@@ -16,7 +16,7 @@ export const createMockPersistentUser = () => {
   return {
     _id: '123',
     email: 'apg@gmail.com',
-    password: '$2y$10$.pC08gaKt/gOaMifg56QJulXdGbSwVJ.DR3yawekg8Fn/3wV77aSu', // 123456,
+    password: '$2a$10$CgpO/0awGwCnCJCHUakmyOgdxw.Htik.vSyq8SHrmZgpvzPdWVblu', // 123456,
     name: 'Arthur'
   }
 }
