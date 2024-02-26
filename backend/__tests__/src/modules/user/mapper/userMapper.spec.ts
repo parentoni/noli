@@ -3,13 +3,14 @@ import { UserPassword } from '../../../../../src/modules/user/domain/userProps/u
 import { UserEmail } from '../../../../../src/modules/user/domain/userProps/userEmail';
 import { UserName } from '../../../../../src/modules/user/domain/userProps/userName';
 import { UserMapper } from '../../../../../src/modules/user/mappers/userMapper';
+import { UniqueGlobalId } from '../../../../../src/shared/domain/UniqueGlobalD';
 
 export const createMockEntityUser = () => {
   const email = UserEmail.create({email: 'apg@gmail.com'}).getRight()
   const password = UserPassword.create({password: '123456', hashed: false}).getRight()
   const name = UserName.create({name: 'Arthur'}).getRight()
 
-  return User.create({email, password, name}).getRight()
+  return User.create({email, password, name}, new UniqueGlobalId("65dcfb66285bdcd6ab649d58")).getRight()
 }
 
 export const createMockPersistentUser = () => {
