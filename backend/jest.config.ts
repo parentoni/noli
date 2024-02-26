@@ -8,6 +8,9 @@ const config: Config = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': "ts-jest"
   },
+  testMatch: [
+    "**/__tests__/**/*.spec.{ts, tsx, jsx, js}"
+  ],
 };
 
 export default config
