@@ -2,7 +2,7 @@ import { UserRegisterResponse } from "./userRegisterResponse";
 import { UserRegisterDTO } from "./userRegisterDTO";
 import { UseCase } from "../../../../shared/core/UseCase";
 import { IUserRepo } from "../../repo/IUserRepo";
-import { IAuthService } from "../../services/IAuthService";
+import { IAuthService, TOKEN_TYPES } from "../../services/IAuthService";
 import { UserEmail } from "../../domain/userProps/userEmail";
 import { UserPassword } from "../../domain/userProps/userPassword";
 import { UserName } from "../../domain/userProps/userName";
@@ -80,7 +80,8 @@ export class UserRegisterUseCase implements UseCase<UserRegisterDTO, UserRegiste
     // Creates an authentication token
     const token = this.authService.signToken({
       email: user.value.email.value,
-      id: user.value.id.toValue()
+      id: user.value.id.toValue(),
+      tokenType: TOKEN_TYPES.AUTHENTICATE
     })
 
     return right({token: token})

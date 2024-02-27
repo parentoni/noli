@@ -2,7 +2,7 @@ import { UseCase } from "../../../../shared/core/UseCase";
 import { left, right } from "../../../../shared/core/result";
 import { UserMapper } from "../../mappers/userMapper";
 import { IUserRepo } from "../../repo/IUserRepo";
-import { IAuthService } from "../../services/IAuthService";
+import { IAuthService, TOKEN_TYPES } from "../../services/IAuthService";
 import { GetUserByTokenDTO } from "./getUserByTokenDTO";
 import { GetUserByTokenErrors } from "./getUserByTokenErrors";
 import { GetUserByTokenResponse } from "./getUserByTokenResponse";
@@ -44,6 +44,11 @@ export class GetUserByTokenUseCase implements UseCase<GetUserByTokenDTO, GetUser
       return left(decodedToken.value);
     }
 
+    // If token fucntion is not authenticate, returns error
+    if (decodedToken.value.tokenType !== TOKEN_TYPES.AUTHENTICATE) {
+      return left(GetUserByTokenErrors.UserNotFound())
+    }
+
     // Get the user by id
     const user = await this.userRepository.findById(decodedToken.value.id);
     if (user.isLeft()) {
@@ -52,13 +57,12 @@ export class GetUserByTokenUseCase implements UseCase<GetUserByTokenDTO, GetUser
 
 
     //Check if user is null
-    if (user.value === null) {
+    if (user.value === null ) {
       return left(GetUserByTokenErrors.UserNotFound());
     }
 
     // Maps user to persistent
     const userPersistent = await UserMapper.toPersistent(user.value)
     return right(userPersistent);
-
   }
 }

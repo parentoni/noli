@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-const mongod = MongoMemoryServer.create();
+const mongod = MongoMemoryServer.create()
 
 // Connect to the in-memory database.
 export const connect = async () => {

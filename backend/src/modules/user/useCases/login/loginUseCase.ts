@@ -6,7 +6,7 @@ import { UserPassword } from "../../domain/userProps/userPassword";
 import { EitherUtils } from "../../../../shared/utils/EitherUtils";
 import { left, right } from "../../../../shared/core/result";
 import { IUserRepo } from "../../repo/IUserRepo";
-import { IAuthService } from "../../services/IAuthService";
+import { IAuthService, TOKEN_TYPES } from "../../services/IAuthService";
 import { LoginErrors } from "./loginErrors";
 
 /**
@@ -61,7 +61,7 @@ export class LoginUseCase implements UseCase<LoginDTO, LoginResponse> {
 
     
     //If password is valid, generate token
-    const token = this.authService.signToken({ email: email.value, id: user.value.id.toValue()});
+    const token = this.authService.signToken({ email: email.value, id: user.value.id.toValue(), tokenType: TOKEN_TYPES.AUTHENTICATE});
     return right({token: token})
 
   }

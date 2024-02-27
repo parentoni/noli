@@ -1,9 +1,10 @@
+import { TOKEN_TYPES } from '../../../../../src/modules/user/services/IAuthService'
 import { JWTAuth } from '../../../../../src/modules/user/services/JWTAuth'
 
 const testSecret = 'VXlbZdZiDctgU7vSvsFAzevsIcqET82lJJhWMdVIopc='
 const authService = new JWTAuth(testSecret)
 
-const testPayload = { id: '123', email: 'apg@gmail.com'}
+const testPayload = { id: '123', email: 'apg@gmail.com', tokenType: TOKEN_TYPES.AUTHENTICATE}
 
 describe('JWTAuth service', () => {
   it('Should create a token', () => {
