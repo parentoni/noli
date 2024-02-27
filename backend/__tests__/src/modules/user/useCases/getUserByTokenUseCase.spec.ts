@@ -57,8 +57,8 @@ describe("Find user by token", () => {
 
   it('Should return Unauthorized when token is invalid', async () => {
     const userByToken = await getUserByTokenUseCase.execute({token: 'invalid'})
-    
+
     expect(userByToken.isLeft()).toBeTruthy()
     expect(userByToken.value).toBeInstanceOf(CommonUseCaseResult.Unathorized)
- })
+  })
 })

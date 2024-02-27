@@ -1,9 +1,10 @@
 import { JWTAuth } from '../../../../../src/modules/user/services/JWTAuth'
 
 const testSecret = 'VXlbZdZiDctgU7vSvsFAzevsIcqET82lJJhWMdVIopc='
-export const authService = new JWTAuth(testSecret)
+const authService = new JWTAuth(testSecret)
 
 const testPayload = { id: '123', email: 'apg@gmail.com'}
+
 describe('JWTAuth service', () => {
   it('Should create a token', () => {
     const token = authService.signToken(testPayload)
@@ -26,5 +27,6 @@ describe('JWTAuth service', () => {
     expect(decodedInvalid.isLeft()).toBe(true)
   })
 
-
 })
+
+export {authService}
