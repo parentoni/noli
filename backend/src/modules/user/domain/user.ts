@@ -6,6 +6,7 @@ import { UniqueGlobalId } from "../../../shared/domain/UniqueGlobalD";
 import { UserEmail } from "./userProps/userEmail";
 import { UserName } from "./userProps/userName";
 import { UserPassword } from "./userProps/userPassword";
+import { UserRole } from "./userProps/userRole";
 
 /**
  * Required params for initalizating and user aggregate root
@@ -13,7 +14,8 @@ import { UserPassword } from "./userProps/userPassword";
 export type UserProps = {
   email: UserEmail,
   password: UserPassword,
-  name: UserName
+  name: UserName,
+  role: UserRole
 }
 
 /**
@@ -37,6 +39,11 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.name
   }
 
+  
+  get role(): UserRole {
+    return this.props.role
+  }
+
   /**
    * Private constructor forces the use of the create method
    * @param {UserProps} props 
@@ -58,8 +65,10 @@ export class User extends AggregateRoot<UserProps> {
     const guardResult =  Guard.againstNullOrUndefinedBulk([
       {argument: props.email, argumentName: 'email'},
       {argument: props.password, argumentName: 'password'},
-      {argument: props.name, argumentName: 'name'}
+      {argument: props.name, argumentName: 'name'},
+      {argument: props.role, argumentName: "role"}
     ])
+
     if (guardResult.isLeft()) {
       return left(guardResult.value)
     }

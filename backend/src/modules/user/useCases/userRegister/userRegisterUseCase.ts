@@ -10,6 +10,7 @@ import { EitherUtils } from "../../../../shared/utils/EitherUtils";
 import { left, right } from "../../../../shared/core/result";
 import { UserRegisterErrors } from "./userRegisterErrors";
 import { User } from "../../domain/user";
+import { USER_ROLES, UserRole } from "../../domain/userProps/userRole";
 
 /**
  * 
@@ -48,9 +49,10 @@ export class UserRegisterUseCase implements UseCase<UserRegisterDTO, UserRegiste
     const emailOrError = UserEmail.create({email: request.email}) 
     const passwordOrError = UserPassword.create({password: request.password, hashed: false})
     const nameOrError = UserName.create({name: request.name})
+    const roleOrError = UserRole.create({ role: USER_ROLES.USER })
 
     // Returns an error response if any of the value objects are invalid
-    const combineResult = EitherUtils.combine([emailOrError, passwordOrError, nameOrError])
+    const combineResult = EitherUtils.combine([emailOrError, passwordOrError, nameOrError, roleOrError])
     if (combineResult.isLeft()) {
       return left(combineResult.value)
     }
@@ -65,7 +67,8 @@ export class UserRegisterUseCase implements UseCase<UserRegisterDTO, UserRegiste
     const user = User.create({
       email: emailOrError.getRight(),
       password: passwordOrError.getRight(),
-      name: nameOrError.getRight()
+      name: nameOrError.getRight(),
+      role: roleOrError.getRight(), 
     })
     if (user.isLeft()) {
       return left(user.value)

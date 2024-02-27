@@ -7,6 +7,7 @@ import { User } from "../domain/user";
 import { UserEmail } from "../domain/userProps/userEmail";
 import { UserName } from "../domain/userProps/userName";
 import { UserPassword } from "../domain/userProps/userPassword";
+import { UserRole } from "../domain/userProps/userRole";
 
 /**
  * 
@@ -37,6 +38,7 @@ export class UserMapper {
       name: user.name.value,
       email: user.email.value,
       password: password.value,
+      role: user.role.value
     };
   }
 
@@ -53,9 +55,10 @@ export class UserMapper {
     const emailOrError = UserEmail.create({email: user.email});
     const nameOrError = UserName.create({name: user.name});
     const passwordOrError = UserPassword.create({ password: user.password, hashed: true });
+    const roleOrError = UserRole.create({ role: user.role })
 
     // Guarantees that all the properties are valid
-    const combineResult = EitherUtils.combine([emailOrError, nameOrError, passwordOrError, idOrError]);
+    const combineResult = EitherUtils.combine([emailOrError, nameOrError, passwordOrError, idOrError, roleOrError]);
     if (combineResult.isLeft()) {
       return left(combineResult.value);
     }
@@ -65,6 +68,7 @@ export class UserMapper {
       email: emailOrError.getRight(),
       name: nameOrError.getRight(),
       password: passwordOrError.getRight(),
+      role: roleOrError.getRight()
     }, idOrError.getRight());
 
     return userOrError;

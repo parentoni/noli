@@ -4,13 +4,15 @@ import { UserEmail } from '../../../../../src/modules/user/domain/userProps/user
 import { UserName } from '../../../../../src/modules/user/domain/userProps/userName';
 import { UserMapper } from '../../../../../src/modules/user/mappers/userMapper';
 import { UniqueGlobalId } from '../../../../../src/shared/domain/UniqueGlobalD';
+import { USER_ROLES, UserRole } from '../../../../../src/modules/user/domain/userProps/userRole';
 
 export const createMockEntityUser = () => {
   const email = UserEmail.create({email: 'apg@gmail.com'}).getRight()
   const password = UserPassword.create({password: '123456', hashed: false}).getRight()
-  const name = UserName.create({name: 'Arthur'}).getRight()
+  const name = UserName.create({ name: 'Arthur'}).getRight()
+  const role = UserRole.create({ role: USER_ROLES.USER }).getRight()
 
-  return User.create({email, password, name}, new UniqueGlobalId("65dcfb66285bdcd6ab649d58")).getRight()
+  return User.create({email, password, name, role}, new UniqueGlobalId("65dcfb66285bdcd6ab649d58")).getRight()
 }
 
 export const createMockPersistentUser = () => {
@@ -18,7 +20,8 @@ export const createMockPersistentUser = () => {
     _id: '123',
     email: 'apg@gmail.com',
     password: '$2a$10$CgpO/0awGwCnCJCHUakmyOgdxw.Htik.vSyq8SHrmZgpvzPdWVblu', // 123456,
-    name: 'Arthur'
+    name: 'Arthur',
+    role: USER_ROLES.USER,
   }
 }
 
@@ -52,7 +55,8 @@ describe('User Mapper', () => {
       email: 'sfsdfa',
       password: '123456',
       name: 'Arthur',
-    }
+      role: USER_ROLES.USER
+    } 
     const entityUser = UserMapper.toDomain(persistentUser)
     expect(entityUser.isLeft()).toBe(true)
     
@@ -92,6 +96,7 @@ describe('User Mapper', () => {
       email: 'sfsdfa',
       password: '123456',
       name: 'Arthur',
+      role: USER_ROLES.USER
     }
     const entityUsers = UserMapper.toDomainBulk([invalidPersistentUser, invalidPersistentUser])
     expect(entityUsers).toEqual([])
