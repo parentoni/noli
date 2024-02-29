@@ -2,7 +2,7 @@ import { UserRegisterResponse } from "./userRegisterResponse";
 import { UserRegisterDTO } from "./userRegisterDTO";
 import { UseCase } from "../../../../shared/core/UseCase";
 import { IUserRepo } from "../../repo/IUserRepo";
-import { IAuthService } from "../../services/IAuthService";
+import { IAuthService, TOKEN_TYPES } from "../../services/IAuthService";
 import { UserEmail } from "../../domain/userProps/userEmail";
 import { UserPassword } from "../../domain/userProps/userPassword";
 import { UserName } from "../../domain/userProps/userName";
@@ -10,6 +10,7 @@ import { EitherUtils } from "../../../../shared/utils/EitherUtils";
 import { left, right } from "../../../../shared/core/result";
 import { UserRegisterErrors } from "./userRegisterErrors";
 import { User } from "../../domain/user";
+import { USER_ROLES, UserRole } from "../../domain/userProps/userRole";
 
 /**
  * 
@@ -48,9 +49,10 @@ export class UserRegisterUseCase implements UseCase<UserRegisterDTO, UserRegiste
     const emailOrError = UserEmail.create({email: request.email}) 
     const passwordOrError = UserPassword.create({password: request.password, hashed: false})
     const nameOrError = UserName.create({name: request.name})
+    const roleOrError = UserRole.create({ role: USER_ROLES.USER })
 
     // Returns an error response if any of the value objects are invalid
-    const combineResult = EitherUtils.combine([emailOrError, passwordOrError, nameOrError])
+    const combineResult = EitherUtils.combine([emailOrError, passwordOrError, nameOrError, roleOrError])
     if (combineResult.isLeft()) {
       return left(combineResult.value)
     }
@@ -65,7 +67,8 @@ export class UserRegisterUseCase implements UseCase<UserRegisterDTO, UserRegiste
     const user = User.create({
       email: emailOrError.getRight(),
       password: passwordOrError.getRight(),
-      name: nameOrError.getRight()
+      name: nameOrError.getRight(),
+      role: roleOrError.getRight(), 
     })
     if (user.isLeft()) {
       return left(user.value)
@@ -80,7 +83,8 @@ export class UserRegisterUseCase implements UseCase<UserRegisterDTO, UserRegiste
     // Creates an authentication token
     const token = this.authService.signToken({
       email: user.value.email.value,
-      id: user.value.id.toValue()
+      id: user.value.id.toValue(),
+      tokenType: TOKEN_TYPES.AUTHENTICATE
     })
 
     return right({token: token})
