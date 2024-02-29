@@ -2,7 +2,7 @@ import { Guard } from "../../../../shared/core/Guard";
 import { CommonUseCaseResult } from "../../../../shared/core/response/useCaseError";
 import { Either, left, right } from "../../../../shared/core/result";
 import { ValueObject } from "../../../../shared/domain/ValueObject";
-
+import {TextUtils} from "../../../../shared/utils/TextUtils"
 /**
  * 
  * @class StoreName
@@ -21,19 +21,21 @@ export class StoreName extends ValueObject<StoreNameProps> {
     }
 
     public static create(props : StoreNameProps) : Either<CommonUseCaseResult.InvalidValue, StoreName> {
+        //sanitize name
+        const trimmedName = TextUtils.trim(props.name)
+
         // Check for empty value
-        const GuardResponse = Guard.againstNullOrUndefined(props.name.trim(), "STORE_NAME")
-        
-        // Check for name shorter than 4 letters
-        if (GuardResponse.isLeft() || props.name.trim().length <= 4) {
+        const GuardResponse = Guard.againstNullOrUndefined(trimmedName, "STORE_NAME")
+        // Returns left if value is empty
+        if (GuardResponse.isLeft()) {
             return left(CommonUseCaseResult.InvalidValue.create({
                 errorMessage: `The value sent is not a valid store name: ${props.name}`,
                 variable: "STORE_NAME",
                 location: `${StoreName.name}.${StoreName.create.name}`
             }))
         }
-
-        return right(new StoreName(props))
+        // Returns new storename
+        return right(new StoreName({name : trimmedName}))
 
     }
 }

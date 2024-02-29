@@ -4,7 +4,7 @@ import { CommonUseCaseResult } from "../../../../shared/core/response/useCaseErr
 import { Either, left, right } from "../../../../shared/core/result";
 import { UniqueGlobalId } from "../../../../shared/domain/UniqueGlobalD";
 import { ValueObject } from "../../../../shared/domain/ValueObject";
-
+import { TextUtils } from "../../../../shared/utils/TextUtils";
 /**
  * 
  * @class StoreAdmin
@@ -23,12 +23,18 @@ export class StoreAdmin extends ValueObject<StoreAdminProps> {
     }
 
     public static create(props : StoreAdminProps) : Either<CommonUseCaseResult.InvalidValue, StoreAdmin> {
-        // Check for empty value
-        const GuardResponse = Guard.againstNullOrUndefined(props.admin, "STORE_ADMIN")
+        // Trims admin
+        const sanitizedAdmin = TextUtils.trim(props.admin.toValue())
+
+        // Checks for empty value
+        const GuardResponse = Guard.againstNullOrUndefined(sanitizedAdmin, "STORE_ADMIN")
+        
+        // Returns left if value is empty
 
         if (GuardResponse.isLeft()) {
             return left(GuardResponse.value)
         }
+        // Returns new storename
 
         return right(new StoreAdmin(props))
 
