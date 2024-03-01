@@ -14,6 +14,7 @@ export class ItemPrice extends ValueObject<ItemPriceProps> {
     }
 
     public static create(props : ItemPriceProps) : Either<CommonUseCaseResult.InvalidValue, ItemPrice> {
+        // Checks if number is bigger than 0
         const sanitizedNumber = NumberUtils.checkLength(props.price)
 
         // Checks if number is undefined
