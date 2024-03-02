@@ -4,6 +4,6 @@ import { IStore } from "../../../shared/infra/database/models/Store";
 import { Store } from "../domain/store";
 
 export interface IStoreRepo {
-    save(store: Store) : Promise<Either<CommonUseCaseResult.UnexpectedError, null>>,
+    upsert(store: Store) : Promise<Either<CommonUseCaseResult.UnexpectedError, null>>,
     exists(id : string) : Promise<Either<CommonUseCaseResult.UnexpectedError, true | false>>
 }

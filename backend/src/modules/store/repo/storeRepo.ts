@@ -6,7 +6,7 @@ import { Store } from "../domain/store";
 import { StoreModel } from "../../../shared/infra/database/models/Store";
 import { StoreMapper } from "../mappers/storeMapper";
 export class StoreRepoMongo implements IStoreRepo {
-    async save(store : Store) : Promise<Either<CommonUseCaseResult.UnexpectedError, null>> {
+    async upsert(store : Store) : Promise<Either<CommonUseCaseResult.UnexpectedError, null>> {
         try {
             // Turns domain to persistent
             const PersistentStore = StoreMapper.toPersistent(store)
