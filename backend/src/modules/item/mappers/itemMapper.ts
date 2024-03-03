@@ -12,19 +12,28 @@ import { ItemStore } from "../domain/itemProps/itemStoreId";
 
 
 export class ItemMap {
-    public static toPersistent(item : Item) : IItem{
+    public static toPersistent(item : Item) : Either<CommonUseCaseResult.UnexpectedError, IItem>{
+        try {
+
         // Turns domain value into persistent
-        return {
-            _id : item.id.toValue(),
-            name : item.name,
-            image : item.image,
-            price : item.price,
-            description : item.description,
-            storeId : item.storeId.toValue()
+            return right ({
+                _id : item.id.toValue(),
+                name : item.name,
+                image : item.image,
+                price : item.price,
+                description : item.description,
+                storeId : item.storeId.toValue()
+            })}
+
+        catch (err){ 
+            return left(CommonUseCaseResult.UnexpectedError.create(err))
         }
     }
 
     public static toDomain(item : IItem) : Either<CommonUseCaseResult.InvalidValue | CommonUseCaseResult.UnexpectedError, Item> {
+        try {
+
+        
         // Create properties
         const nameOrError = ItemName.create({name : item.name})
         const imageOrError = ItemImage.create({image : item.image})
@@ -53,6 +62,8 @@ export class ItemMap {
         }
 
         return right(itemDomain.value)
-
+    }catch (err) {
+        return left(CommonUseCaseResult.UnexpectedError.create(err))
+    }
     }
 }

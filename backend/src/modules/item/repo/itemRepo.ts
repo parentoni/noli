@@ -11,13 +11,18 @@ export class ItemRepoMongo implements IItemRepo {
             
                 // Turns domain to persistent
                 const PersistentItem = ItemMap.toPersistent(item)
+
+                if (PersistentItem.isLeft()) {
+                    return left(PersistentItem.value)
+                }
+
                 // Checks if store already exists
-                const exists = await ItemModel.exists({_id : PersistentItem._id})
+                const exists = await ItemModel.exists({_id : PersistentItem.getRight()._id})
     
                 if (exists === null) {
                     await ItemModel.create(item)
                 } else {
-                    await ItemModel.findOneAndUpdate({_id : PersistentItem._id}, PersistentItem)
+                    await ItemModel.findOneAndUpdate({_id : PersistentItem.value._id}, PersistentItem)
                 }
     
                 return right(null)
@@ -71,5 +76,5 @@ export class ItemRepoMongo implements IItemRepo {
         }
     }
 
-    
+
 }
