@@ -1,4 +1,3 @@
-
 export enum SUPPORTED_PAYMENT_SERVICES {
     STRIPE = "STRIPE"
 }
