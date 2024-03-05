@@ -1,6 +1,6 @@
 import { CommonUseCaseResult } from "../../../../shared/core/response/useCaseError";
 import { Either, left, right } from "../../../../shared/core/result";
-import PaymentModel from "../../../../shared/infra/database/models/Payment";
+import PaymentModel, { IPayment } from "../../../../shared/infra/database/models/Payment";
 import { Payment } from "../../domain/payment";
 import { PaymentMapper } from "../../mappers/paymentMapper";
 import { IPaymentRepo } from "../IPaymentRepo";
@@ -29,8 +29,19 @@ export class PaymentRepoMongo implements IPaymentRepo {
     }
 
   }
-  findPaymentByUserId(userId: string): Promise<Either<CommonUseCaseResult.UnexpectedError, Payment[]>> {
-    throw new Error("Method not implemented.");
+  async findPaymentByUserId(userId: string): Promise<Either<CommonUseCaseResult.UnexpectedError, Payment[]>> {
+    try {
+      // find payments and transform to object
+      const allPayments = await PaymentModel.find({ user: userId });
+      const objectPayments = allPayments.map(p => p.toObject() as IPayment);
+
+      // map to domain
+      const payment = PaymentMapper.toDomainBulk(objectPayments);
+
+      return right(payment);
+    } catch (error) {
+      return left(CommonUseCaseResult.UnexpectedError.create(error));
+    }
   }
   findPaymentByExternalId(externalId: string): Promise<Either<CommonUseCaseResult.UnexpectedError, Payment>> {
     throw new Error("Method not implemented.");

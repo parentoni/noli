@@ -1,6 +1,7 @@
 import { PaymentMapper } from '../../../../../src/modules/payment/mappers/paymentMapper';
 import { PaymentRepoMongo } from '../../../../../src/modules/payment/repo/implementations/PaymentRepoMongo'
 import PaymentModel, { IPayment } from '../../../../../src/shared/infra/database/models/Payment';
+import { createMockPersistentUser } from '../../user/mapper/userMapper.spec';
 import { connect, clearDatabase, closeDatabase } from '../../user/repo/db';
 import { createMockDomainPayment } from '../mappers/paymentMapper.spec';
 const paymentRepo = new PaymentRepoMongo();
@@ -61,6 +62,30 @@ describe('PaymentRepoMongo', () => {
       // check if the payment was persisted correctly
       const domainPersistedUpdatedPayment = PaymentMapper.toDomain(persistedUpdatedPayment?.toObject() as IPayment)
       expect(domainPersistedUpdatedPayment.value).toEqual(payment)
+    })
+  })
+
+
+  describe("findPaymentByUserId", () => {
+    it('should find payments by user id', async () => {
+
+      // create payments
+      const payments = [createMockDomainPayment()]
+
+      // upsert all payments
+      payments.forEach(async payment => {
+        const response = await paymentRepo.upsert(payment)
+        expect(response).toBeTruthy()
+      })
+
+
+      // find payments
+      if (!payments[0]) return 
+      const response = await paymentRepo.findPaymentByUserId(payments[0].props.user.toValue())
+
+      // check response
+      expect(response.isRight()).toBeTruthy()
+      expect(response.value).toEqual(payments)
     })
   })
 })
