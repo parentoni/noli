@@ -61,4 +61,13 @@ describe('Payment Mapper', () => {
     expect(mapperResponse).toEqual(domain)
   })
 
+  it("should map a valid bulk of domain to persistent", () => {
+    const persistent = [createMockPersistentPayment(), createMockPersistentPayment(), createMockPersistentPayment()]
+    const domain = [createMockDomainPayment(), createMockDomainPayment(),createMockDomainPayment()]
+
+    const mapperResponse = PaymentMapper.toPersistentBulk(domain)
+    expect(mapperResponse).toBeTruthy()
+    expect(mapperResponse).toEqual(persistent)
+  })
+
 })

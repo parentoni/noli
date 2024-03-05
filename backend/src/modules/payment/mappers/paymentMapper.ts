@@ -25,8 +25,8 @@ export class PaymentMapper {
   public static toDomain(persistent: IPayment): Either<CommonUseCaseResult.InvalidValue, Payment> {
 
     // create props
-    const user = UniqueGlobalId.createExisting(persistent.user);
-    const externalId = UniqueGlobalId.createExisting(persistent.externalId);
+    const user = UniqueGlobalId.createExisting(persistent.user.toString());
+    const externalId = UniqueGlobalId.createExisting(persistent.externalId.toString());
     const provider = PaymentProviderId.create({providerId: persistent.provider});
 
     // check props
