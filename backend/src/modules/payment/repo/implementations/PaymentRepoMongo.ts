@@ -43,8 +43,25 @@ export class PaymentRepoMongo implements IPaymentRepo {
       return left(CommonUseCaseResult.UnexpectedError.create(error));
     }
   }
-  findPaymentByExternalId(externalId: string): Promise<Either<CommonUseCaseResult.UnexpectedError, Payment>> {
-    throw new Error("Method not implemented.");
+  async findPaymentByExternalId(externalId: string): Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, Payment | null>> {
+    try {
+      // find payment
+      const payment = await PaymentModel.findOne({ externalId: externalId });
+      if (!payment || payment === null) {
+        return right(null);
+      }
+
+      // map to domain
+      const domainPayment = PaymentMapper.toDomain(payment.toObject() as IPayment);
+      if (domainPayment.isLeft()) {
+        return left(domainPayment.value);
+      }
+
+      return right(domainPayment.value);
+    }
+    catch (error) {
+      return left(CommonUseCaseResult.UnexpectedError.create(error));
+    }
   }
 }
 

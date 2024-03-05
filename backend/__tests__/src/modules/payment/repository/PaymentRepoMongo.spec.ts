@@ -88,4 +88,23 @@ describe('PaymentRepoMongo', () => {
       expect(response.value).toEqual(payments)
     })
   })
+
+  describe("findPaymentByExternalId", () => {
+    it('should find payment by external id', async () => {
+
+      // create payment
+      const payment = createMockDomainPayment()
+
+      // upsert payment
+      const response = await paymentRepo.upsert(payment)
+      expect(response.isRight()).toBeTruthy()
+
+      // find payment
+      const responseFind = await paymentRepo.findPaymentByExternalId(payment.props.externalId.toValue())
+
+      // check response
+      expect(responseFind.isRight()).toBeTruthy()
+      expect(responseFind.value).toEqual(payment)
+    })
+  })
 })

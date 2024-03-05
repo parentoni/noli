@@ -30,5 +30,5 @@ export interface IPaymentRepo {
    * @param {string} externalId
    * @returns {Promise<Either<CommonUseCaseResult.UnexpectedError, Payment>>}
    * */
-  findPaymentByExternalId: (externalId: string) => Promise<Either<CommonUseCaseResult.UnexpectedError, Payment>>,
+  findPaymentByExternalId: (externalId: string) => Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, Payment | null>>,
 }
