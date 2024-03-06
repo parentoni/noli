@@ -2,7 +2,7 @@ import { Guard } from "../../../../shared/core/Guard";
 import { CommonUseCaseResult } from "../../../../shared/core/response/useCaseError";
 import { Either, left, right } from "../../../../shared/core/result";
 import { ValueObject } from "../../../../shared/domain/ValueObject";
-import { PAYMENT_PROVIDERS } from "../../services/PaymentProviders";
+import { PAYMENT_PROVIDERS } from "../../services/IPaymentProviders";
 
 /**
  * PaymentProvider props.

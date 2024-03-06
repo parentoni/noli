@@ -1,7 +1,6 @@
 import { PaymentMapper } from '../../../../../src/modules/payment/mappers/paymentMapper';
 import { PaymentRepoMongo } from '../../../../../src/modules/payment/repo/implementations/PaymentRepoMongo'
 import PaymentModel, { IPayment } from '../../../../../src/shared/infra/database/models/Payment';
-import { createMockPersistentUser } from '../../user/mapper/userMapper.spec';
 import { connect, clearDatabase, closeDatabase } from '../../user/repo/db';
 import { createMockDomainPayment } from '../mappers/paymentMapper.spec';
 const paymentRepo = new PaymentRepoMongo();

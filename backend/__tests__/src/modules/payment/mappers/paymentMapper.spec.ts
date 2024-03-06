@@ -1,6 +1,6 @@
 import { UniqueGlobalId } from "../../../../../src/shared/domain/UniqueGlobalD"
 import { PaymentProviderId } from "../../../../../src/modules/payment/domain/paymentProps/paymentProviderId"
-import { PAYMENT_PROVIDERS } from "../../../../../src/modules/payment/services/PaymentProviders"
+import { PAYMENT_PROVIDERS } from "../../../../../src/modules/payment/services/IPaymentProviders"
 import { PaymentMapper } from "../../../../../src/modules/payment/mappers/paymentMapper"
 import { Payment } from "../../../../../src/modules/payment/domain/payment"
 

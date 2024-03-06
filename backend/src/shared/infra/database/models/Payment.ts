@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { PAYMENT_PROVIDERS } from "../../../../modules/payment/services/PaymentProviders";
+import { PAYMENT_PROVIDERS } from "../../../../modules/payment/services/IPaymentProviders";
 
 // Mongoose schema for payment
 const paymentSchema = new mongoose.Schema({

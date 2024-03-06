@@ -1,6 +1,6 @@
 import { Payment, PaymentProps } from '../../../../../src/modules/payment/domain/payment'
 import { PaymentProviderId } from '../../../../../src/modules/payment/domain/paymentProps/paymentProviderId'
-import { PAYMENT_PROVIDERS } from '../../../../../src/modules/payment/services/PaymentProviders'
+import { PAYMENT_PROVIDERS } from '../../../../../src/modules/payment/services/IPaymentProviders'
 import { UniqueGlobalId } from '../../../../../src/shared/domain/UniqueGlobalD'
 
 describe('Payment aggregate root', () => {
