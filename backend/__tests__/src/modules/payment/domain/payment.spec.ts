@@ -11,6 +11,7 @@ describe('Payment aggregate root', () => {
 
     const payment = Payment.create({
       externalId: id,
+      store: id,
       user: id,
       provider: paymentProviderId.getRight(),
       amount: 100,

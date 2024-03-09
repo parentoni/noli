@@ -67,16 +67,26 @@ export class Payment extends AggregateRoot<PaymentProps> {
   public static create(props: PaymentProps, id?: UniqueGlobalId): Either<CommonUseCaseResult.InvalidValue, Payment> { 
 
     // check for invalid values.
+    // ignore externalId, as it can be null.
     const guardResult = Guard.againstNullOrUndefinedBulk([
-      { argument: props.externalId, argumentName: 'EXTERNAL_ID' },
       { argument: props.user, argumentName: 'USER' },
       { argument: props.store, argumentName: 'STORE' },
       { argument: props.provider, argumentName: 'PROVIDER' },
       { argument: props.amount, argumentName: 'AMOUNT' },
       { argument: props.payed, argumentName: 'PAYED' }
     ])
+
+    
     if (guardResult.isLeft()) {
       return left(guardResult.value)
+    }
+
+    if (typeof props.externalId === 'undefined') {
+      return left(CommonUseCaseResult.InvalidValue.create({
+        errorMessage: 'ExternalId cannot be undefined',
+        variable: 'externalId',
+        location: 'Payment.create'
+      }))
     }
 
     return right(new Payment(props, id))

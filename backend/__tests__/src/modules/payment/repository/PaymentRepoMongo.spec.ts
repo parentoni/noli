@@ -99,7 +99,7 @@ describe('PaymentRepoMongo', () => {
       expect(response.isRight()).toBeTruthy()
 
       // find payment
-      const responseFind = await paymentRepo.findPaymentByExternalId(payment.props.externalId.toValue())
+      const responseFind = await paymentRepo.findPaymentByExternalId(payment.props.externalId?.toValue() || '')
 
       // check response
       expect(responseFind.isRight()).toBeTruthy()

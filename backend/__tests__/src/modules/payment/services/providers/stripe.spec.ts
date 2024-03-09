@@ -6,7 +6,7 @@ import { CommonUseCaseResult } from "../../../../../../src/shared/core/response/
 const stripe = new Stripe("123456")
 const stripeError = new Stripe("123456")
 stripe.paymentIntents.create = jest.fn().mockImplementation(async () => {
-  return;
+  return {id: "123456789"};
 })
 
 
@@ -31,6 +31,6 @@ describe("Stripe provider", () => {
 
     const result = await provider.createPaymentIntent({payment: payment, destinationId: ''})
     expect(result.isRight()).toBe(true)
-    expect(result.value).toBeNull()
+    expect(result.value).toBe("123456789")
   })
 })

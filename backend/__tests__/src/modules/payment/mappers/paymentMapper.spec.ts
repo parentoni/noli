@@ -9,6 +9,7 @@ export const createMockPersistentPayment = () => {
     externalId: 'external',
     user: '65e50e7b6c10c6ddf83b9ad4',
     provider: PAYMENT_PROVIDERS.STRIPE,
+    store: '65e50e7b6c10c6ddf83b9ad4',
     amount: 1000,
     payed: false,
     _id: '65e50e7b6c10c6ddf83b9ad4'
@@ -18,6 +19,7 @@ export const createMockPersistentPayment = () => {
 export const createMockDomainPayment = () => {
   return Payment.create({
     externalId: UniqueGlobalId.createExisting('external').getRight(),
+    store: UniqueGlobalId.createExisting('65e50e7b6c10c6ddf83b9ad4').getRight(),
     user: UniqueGlobalId.createExisting('65e50e7b6c10c6ddf83b9ad4').getRight(),
     provider: PaymentProviderId.create({ providerId: PAYMENT_PROVIDERS.STRIPE }).getRight(),
     amount: 1000,
@@ -49,7 +51,7 @@ describe('Payment Mapper', () => {
     const domain = createMockDomainPayment()
 
     const mapperResponse = PaymentMapper.toPersistent(domain)
-    expect(mapperResponse).toEqual(persistent)
+    expect(mapperResponse.value).toEqual(persistent)
   })
 
   it("should map a valid bulk of persistent to domain", () => {

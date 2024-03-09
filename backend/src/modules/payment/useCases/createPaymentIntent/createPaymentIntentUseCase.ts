@@ -53,6 +53,7 @@ export class CreatePaymentIntentUseCase implements UseCase<CreatePaymentIntentDT
         amount: request.amount,
         payed: false
     })
+
     if (payment.isLeft()) {
       return left(payment.value)
     }
