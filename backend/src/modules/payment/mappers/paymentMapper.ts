@@ -26,6 +26,7 @@ export class PaymentMapper {
 
     // create props
     const user = UniqueGlobalId.createExisting(persistent.user.toString());
+    const store = UniqueGlobalId.createExisting(persistent.store.toString());
     const externalId = UniqueGlobalId.createExisting(persistent.externalId.toString());
     const provider = PaymentProviderId.create({providerId: persistent.provider});
 
@@ -38,6 +39,7 @@ export class PaymentMapper {
     // create payment
     const paymentOrError = Payment.create({
       externalId: externalId.getRight(),
+      store: store.getRight(),
       user: user.getRight(),
       provider: provider.getRight(),
       amount: persistent.amount,
@@ -57,15 +59,27 @@ export class PaymentMapper {
    * @param {Payment} domain 
    * @returns {IPayment}
    */
-  public static toPersistent(domain: Payment): IPayment {
-    return {
+  public static toPersistent(domain: Payment): Either<CommonUseCaseResult.InvalidValue, IPayment>{
+
+    // check if payment was created at the provider.
+    if (domain.externalId === null) {
+      return left(CommonUseCaseResult.InvalidValue.create({
+        errorMessage: 'Cannot save payments without external id.',
+        variable: 'EXTERNAL_ID',
+        location: 'PaymentMapper.toPersistent'
+      }))
+    }
+
+    return right({
       externalId: domain.externalId.toValue(),
       user: domain.user.toValue(),
+      store: domain.store.toValue(),
       provider: domain.provider.value,
       amount: domain.amount,
       payed: domain.payed,
       _id: domain.id.toValue()
-    }
+    })
+
   }
 
   /**
@@ -98,7 +112,11 @@ export class PaymentMapper {
 
     // iterate thorugh the domain bulk.
     for (const domain of domainBulk) {
-      persistentArray.push(this.toPersistent(domain));
+      const persistentOrError = this.toPersistent(domain)
+      if (persistentOrError.isRight()) {
+        persistentArray.push(persistentOrError.value);
+      }
+
     }
 
     // return persistent array.

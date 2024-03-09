@@ -5,33 +5,38 @@ import { Payment } from "../domain/payment";
 /**
  * List of all supported payment providers. 
  */
+
 export enum PAYMENT_PROVIDERS {
     STRIPE = "STRIPE"
 }
 
-export type CreatePaymentIntentResponse = Promise<Either<CommonUseCaseResult.InvalidValue | CommonUseCaseResult.UnexpectedError, null>>
+/**
+ * Returns external id of the payment intent.
+ */
+export type CreatePaymentIntentResponse = Promise<Either<CommonUseCaseResult.InvalidValue | CommonUseCaseResult.UnexpectedError, string>>
 
 /**
  * Props for creating a payment intent. 
  *
  * @param {Payment} payment - The payment to create the intent for.
- * @typeParam {T} config - The configuration for the payment provider.
+ * @param {string} moneyDestinationId - The id of the account destination.
  */
-export type CreatePaymentIntentProps<T> = {
+export type CreatePaymentIntentProps = {
   payment: Payment
-  config: T 
+  destinationId: string
 }
 /**
  * Interface for the payment provider.
  * Should be implemented by all payment providers.
  */
-export abstract class IPaymentProvider<T> {
+export abstract class IPaymentProvider {
 
+  abstract provider: PAYMENT_PROVIDERS
   /**
    * Creates a payment intent on the payment provider.
    *
    * @param {Payment} props - The payment to create the intent for.
    * @returns {CreatePaymentIntentResponse}
    */
-  abstract createPaymentIntent(props: CreatePaymentIntentProps<T>): CreatePaymentIntentResponse
+  abstract createPaymentIntent(props: CreatePaymentIntentProps): CreatePaymentIntentResponse
 }

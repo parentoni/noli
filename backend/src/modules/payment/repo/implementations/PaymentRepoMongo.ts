@@ -14,13 +14,17 @@ import { IPaymentRepo } from "../IPaymentRepo";
  */
 export class PaymentRepoMongo implements IPaymentRepo {
 
-  async upsert(payment: Payment): Promise<Either<CommonUseCaseResult.UnexpectedError, null>> {
+  async upsert(payment: Payment): Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, null>> {
     try {
       // map payment to persistent
       const persistentPayment = PaymentMapper.toPersistent(payment);
 
+      if (persistentPayment.isLeft()) {
+        return left(persistentPayment.value);
+      }
+
       // upsert payment
-      await PaymentModel.updateOne({ _id: persistentPayment._id }, persistentPayment, { upsert: true }); 
+      await PaymentModel.updateOne({ _id: persistentPayment.value._id }, persistentPayment.value, { upsert: true }); 
 
       // return success
       return right(null)

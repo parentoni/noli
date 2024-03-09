@@ -21,15 +21,15 @@ describe("Stripe provider", () => {
     const provider = new StripeProvider(stripeError)
     const payment = createMockDomainPayment()
 
-    const result = await provider.createPaymentIntent({payment: payment, config: {connectedAccountId: ''}})
+    const result = await provider.createPaymentIntent({payment: payment, destinationId: ''})
     expect(result.value).toBeInstanceOf(CommonUseCaseResult.UnexpectedError)
-  })
+ })
 
   it("should return null on success", async () => {
     const provider = new StripeProvider(stripe)
     const payment = createMockDomainPayment()
 
-    const result = await provider.createPaymentIntent({payment: payment, config: {connectedAccountId: ''}})
+    const result = await provider.createPaymentIntent({payment: payment, destinationId: ''})
     expect(result.isRight()).toBe(true)
     expect(result.value).toBeNull()
   })

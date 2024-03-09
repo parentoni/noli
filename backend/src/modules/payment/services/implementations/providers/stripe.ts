@@ -1,7 +1,7 @@
 import { Secrets } from "../../../../../config/secretsManager"
 import { CommonUseCaseResult } from "../../../../../shared/core/response/useCaseError"
 import { left, right } from "../../../../../shared/core/result"
-import { CreatePaymentIntentProps, CreatePaymentIntentResponse, IPaymentProvider } from "../../IPaymentProviders"
+import { CreatePaymentIntentProps, CreatePaymentIntentResponse, IPaymentProvider, PAYMENT_PROVIDERS } from "../../IPaymentProviders"
 import Stripe from "stripe"
 /**
  * Stripe configureation type.
@@ -18,7 +18,8 @@ export type StripeConfiguration = {
  *
  * @author Arthur Parentoni Guimaraes <parentoni.arthur@gmail.com>
  */
-export class StripeProvider implements IPaymentProvider<StripeConfiguration> {
+export class StripeProvider implements IPaymentProvider {
+  provider = PAYMENT_PROVIDERS.STRIPE
   stripe: Stripe
 
   // Inject the stripe instance.
@@ -26,17 +27,17 @@ export class StripeProvider implements IPaymentProvider<StripeConfiguration> {
     this.stripe = stripe
   }
 
-  async createPaymentIntent(props: CreatePaymentIntentProps<StripeConfiguration>): CreatePaymentIntentResponse {
+  async createPaymentIntent(props: CreatePaymentIntentProps): CreatePaymentIntentResponse {
     try {
-      await this.stripe.paymentIntents.create({
+      const response = await this.stripe.paymentIntents.create({
           amount: props.payment.amount * 100, // transform to cents
           currency: "BRL",
           transfer_data: {
-            destination: props.config.connectedAccountId
+            destination: props.destinationId
           }
       }) 
 
-      return right(null)
+      return right(response.id)
     } catch (error) {
       return left(CommonUseCaseResult.UnexpectedError.create(error))
     }

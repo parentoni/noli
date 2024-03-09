@@ -5,6 +5,7 @@ import { PAYMENT_PROVIDERS } from "../../../../modules/payment/services/IPayment
 const paymentSchema = new mongoose.Schema({
   externalId: {type: String, required: true},
   user: {type: mongoose.Types.ObjectId, required:true},
+  store: {type: mongoose.Types.ObjectId, required: true},
   provider: {type: String, enum: PAYMENT_PROVIDERS, required: true},
   amount: {type: Number, required: true},
   payed: {type: Boolean, required: true}
@@ -15,6 +16,7 @@ export type IPayment = {
   _id: string;
   externalId: string;
   user: string;
+  store: string;
   provider: PAYMENT_PROVIDERS;
   amount: number;
   payed: boolean;

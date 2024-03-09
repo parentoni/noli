@@ -16,7 +16,7 @@ export interface IPaymentRepo {
    * @returns {Promise<Either<CommonUseCaseResult.UnexpectedError, null>>}
    *
    * */
-  upsert: (payment: Payment) => Promise<Either<CommonUseCaseResult.UnexpectedError, null>>,
+  upsert: (payment: Payment) => Promise<Either<CommonUseCaseResult.UnexpectedError | CommonUseCaseResult.InvalidValue, null>>,
 
   /**
    * Find all payments by user id.

@@ -22,19 +22,6 @@ export const mockedLoginUseCase = new LoginUseCase(userRepo,authService)
 
 describe("Login use case", () => {
 
-  beforeAll(async () => {
-    await connect()
-  })
-
-
-  afterEach(async () => {
-    await clearDatabase()
-  })
-
-  afterAll(async () => {
-    await closeDatabase()
-  })
-
   it("should successfully login a user", async () => {
     const result = await mockedLoginUseCase.execute({email: 'apg@gmail.com', password: "123456"})
     expect(result.isRight()).toBe(true)
