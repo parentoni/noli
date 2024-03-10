@@ -3,6 +3,8 @@ import { CommonUseCaseResult } from "../../../shared/core/response/useCaseError"
 import { Either, left, right } from "../../../shared/core/result";
 import { AggregateRoot } from "../../../shared/domain/AggregateRoot";
 import { UniqueGlobalId } from "../../../shared/domain/UniqueGlobalD";
+import { DomainEvents } from "../../../shared/domain/events/DomainEvents";
+import { PaymentPayed } from "./events/paymentPayed";
 import { PaymentProviderId } from "./paymentProps/paymentProviderId";
 
 /**
@@ -56,6 +58,11 @@ export class Payment extends AggregateRoot<PaymentProps> {
 
   get store(): UniqueGlobalId {
     return this.props.store;
+  }
+
+  public pay(): void {
+    this.props.payed = true
+    this.addDomainEvent(new PaymentPayed(this))
   }
 
   /**

@@ -3,7 +3,6 @@ import { UniqueGlobalId } from "../../../../shared/domain/UniqueGlobalD";
 import { BaseController } from "../../../../shared/infra/http/models/BaseController";
 import { AuthenticatedRequest } from "../../../../shared/infra/http/utils/Middleware";
 import { Store } from "../../../store/domain/store";
-import { User } from "../../../user/domain/user";
 import { CreatePaymentIntentUseCase } from "./createPaymentIntentUseCase";
 import { Request, Response } from "express";
 
