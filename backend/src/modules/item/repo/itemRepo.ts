@@ -18,9 +18,8 @@ export class ItemRepoMongo implements IItemRepo {
 
                 // Checks if store already exists
                 const exists = await ItemModel.exists({_id : PersistentItem.getRight()._id})
-    
                 if (exists === null) {
-                    await ItemModel.create(item)
+                    await ItemModel.create(PersistentItem.value)
                 } else {
                     await ItemModel.findOneAndUpdate({_id : PersistentItem.value._id}, PersistentItem)
                 }

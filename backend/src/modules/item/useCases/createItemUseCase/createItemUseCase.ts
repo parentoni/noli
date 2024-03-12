@@ -12,6 +12,7 @@ import { EitherUtils } from "../../../../shared/utils/EitherUtils";
 import { itemRepo } from "../../repo";
 import { CreateItemDTO } from "./createItemDTO";
 import { UniqueGlobalId } from "../../../../shared/domain/UniqueGlobalD";
+import { storeRepo } from "../../../store/repo";
 
 export class CreateItemUseCase implements UseCase<CreateItemDTO, Promise<Either<CommonUseCaseResult.InvalidValue | CommonUseCaseResult.UnexpectedError, null>>> {
 
@@ -32,6 +33,18 @@ export class CreateItemUseCase implements UseCase<CreateItemDTO, Promise<Either<
         if (combineResponse.isLeft()) {
             return left(combineResponse.value)
         }
+
+        // Checks if item store exists
+        // const exists = await storeRepo.exists(storeIdOrError.getRight().value)
+
+        // if (exists.isLeft() || exists.getRight() === false) {
+        //     return left(CommonUseCaseResult.InvalidValue.create({
+        //         errorMessage: `A store could not be found with the specified ID`,
+        //         variable: "ITEM_STORE_ID",
+        //         location: `${CreateItemUseCase.name}.execute`
+        //     }))
+        // }
+
         // Creates item domain
         const itemDomain = Item.create({
             name : nameOrError.getRight(),
@@ -45,7 +58,7 @@ export class CreateItemUseCase implements UseCase<CreateItemDTO, Promise<Either<
             return left(itemDomain.value)
         }
         
-        // Runs repo function to create item in database
+        // Runs repo function to create item in
         const itemMongo = await itemRepo.upsert(itemDomain.value)
 
         if (itemMongo.isLeft()) {
