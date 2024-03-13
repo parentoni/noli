@@ -3,6 +3,8 @@ import { UniqueGlobalId } from "../../../../shared/domain/UniqueGlobalD";
 import { BaseController } from "../../../../shared/infra/http/models/BaseController";
 import { AuthenticatedRequest } from "../../../../shared/infra/http/utils/Middleware";
 import { Store } from "../../../store/domain/store";
+import { UserMapper } from "../../../user/mappers/userMapper";
+import { PaymentMapper } from "../../mappers/paymentMapper";
 import { CreatePaymentIntentUseCase } from "./createPaymentIntentUseCase";
 import { Request, Response } from "express";
 
@@ -43,7 +45,7 @@ export class CreatePaymentIntentController extends BaseController<AuthenticatedR
     if (response.isLeft()) {
       this.errorHandler(res, response.value)
     } else {
-      this.ok(res, response.value)
+      this.ok(res, {clientSecret: response.value.clientSecret})  
     }
   }
 

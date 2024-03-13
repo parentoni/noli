@@ -4,11 +4,22 @@
  */
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router-dom";
 import { Login } from "./pages/login/Login";
+import { PaymentTest } from "./pages/payment/PaymentTest";
+import { Redirect } from "./pages/redirect/Redirect";
+import { AuthProvider } from "./shared/contexts/AuthContext";
 
 const routes: RouteObject[] = [
   {
     path: "/auth/login",
     element: <Login />
+  },
+  {
+    path: "/auth/redirect",
+    element: <Redirect />
+  },
+  {
+    path: "/test",
+    element: <PaymentTest />
   }
 ]
 
@@ -16,7 +27,9 @@ const router = createBrowserRouter(routes)
 
 const App = () => {
   return (
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   )
 }
 

@@ -12,8 +12,10 @@ export enum PAYMENT_PROVIDERS {
 
 /**
  * Returns external id of the payment intent.
+ * @param {string} externalId - The external id of the payment intent.
+ * @param {string} clientSecret - The client secret of the payment intent.
  */
-export type CreatePaymentIntentResponse = Promise<Either<CommonUseCaseResult.InvalidValue | CommonUseCaseResult.UnexpectedError, string>>
+export type CreatePaymentIntentResponse = Promise<Either<CommonUseCaseResult.InvalidValue | CommonUseCaseResult.UnexpectedError, {externalId: string, clientSecret: string}>>
 
 /**
  * Props for creating a payment intent. 

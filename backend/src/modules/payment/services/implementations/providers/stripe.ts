@@ -37,7 +37,7 @@ export class StripeProvider implements IPaymentProvider {
           }
       }) 
 
-      return right(response.id)
+      return right({externalId: response.id, clientSecret: response.client_secret || ""})
     } catch (error) {
       return left(CommonUseCaseResult.UnexpectedError.create(error))
     }

@@ -70,7 +70,7 @@ export class CreatePaymentIntentUseCase implements UseCase<CreatePaymentIntentDT
 
     // create a definitive payment
     const definitivePayment = Payment.create({
-      externalId: UniqueGlobalId.createExisting(paymentIntent.value).getRight(),
+      externalId: UniqueGlobalId.createExisting(paymentIntent.value.externalId).getRight(),
       store: request.store.id,
       provider: paymentProviderId.getRight(),
       user: request.user.id,
@@ -89,6 +89,7 @@ export class CreatePaymentIntentUseCase implements UseCase<CreatePaymentIntentDT
     }
 
     // Return definitive payment 
-    return right(definitivePayment.value)
+    return right({payment: definitivePayment.value,clientSecret: paymentIntent.value.clientSecret})
+
   }
 }

@@ -1,4 +1,5 @@
 export type UserProps = {
+  _id: string,
   email: string,
   password: string,
   name: string,
@@ -13,10 +14,18 @@ export type UserProps = {
  * @author Arthur Parentoni Guimaraes <parentoni.arthur@gmail.com>
  */
 export class User {
-  constructor(public email: string, public password: string, public name: string, public role: number) {
-    this.email = email
-    this.password = password
-    this.name = name
-    this.role = role
+  _id: string
+  email: string
+  password: string
+  name: string
+  role: number
+  
+
+  constructor(props: UserProps) {
+    this._id = props._id
+    this.email = props.email
+    this.password = props.password
+    this.name = props.name
+    this.role = props.role
   }
 }
