@@ -25,7 +25,7 @@ provider.createPaymentIntent = jest.fn().mockImplementation(async ({payment}: {p
       location: "MOCK"
     }))
   }
-  return right("123456789")
+  return right({externalId: "123456789", clientSecret: "123"})
 }) 
 
 paymentRepo.upsert = jest.fn().mockImplementation(async (payment: Payment) => {
@@ -55,7 +55,7 @@ describe("Create payment intent use case", () => {
     expect(result.isRight()).toBe(true)
 
     if (result.isLeft()) return;
-    expect(result.value.externalId?.toValue()).toBe("123456789")
+    expect(result.value.payment.externalId?.toValue()).toBe("123456789")
   })
 
   it("should return left when user id is invalid", async () => {

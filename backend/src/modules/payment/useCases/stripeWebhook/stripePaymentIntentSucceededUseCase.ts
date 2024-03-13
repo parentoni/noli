@@ -29,13 +29,13 @@ export  class StripePaymentIntentSucceededUseCase implements UseCase<StripePayme
   async execute(request: StripePaymentIntentSuccededDTO): Promise<StripePaymentIntentSuccededResponse> {
 
     // get the payment by the external id
-    const repoResponse = await this.paymentRepo.findPaymentByExternalId(request.object.id);
+    const repoResponse = await this.paymentRepo.findPaymentByExternalId(request.paymentIntent.id);
 
     if (repoResponse.isLeft() || repoResponse.value === null) {
       return left(CommonUseCaseResult.InvalidValue.create({
         errorMessage: "Payment was not found",
         location: "StripePaymentIntentSucceededUseCase",
-        variable: "request.object.id"
+        variable: "request.paymentIntent.id"
       }))
     }
 

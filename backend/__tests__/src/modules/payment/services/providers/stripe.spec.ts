@@ -31,6 +31,7 @@ describe("Stripe provider", () => {
 
     const result = await provider.createPaymentIntent({payment: payment, destinationId: ''})
     expect(result.isRight()).toBe(true)
-    expect(result.value).toBe("123456789")
+    if (result.isLeft()) return;
+    expect(result.value.externalId).toBe("123456789")
   })
 })
