@@ -38,7 +38,7 @@ export class StripeWebhookController extends BaseController<Request> {
 
       switch (event.type) {
         case 'payment_intent.succeeded':
-          await this.stripePaymentIntentSucceededUseCase.execute({object: event.data.object});
+          await this.stripePaymentIntentSucceededUseCase.execute({paymentIntent: event.data.object});
           break;
         default:
           break; 
