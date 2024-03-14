@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { User } from "../../../../modules/user/domain/user";
 import { GetUserByTokenUseCase } from "../../../../modules/user/useCases/getUserByToken/getUserByTokenUseCase";
 import { UserMapper } from "../../../../modules/user/mappers/userMapper";
+import { IUser } from "../../database/models/User";
+import { CommonUseCaseResult } from "../../../core/response/useCaseError";
+import { USER_ROLES } from "../../../../modules/user/domain/userProps/userRole";
 /**
  * 
  * @class AuthenticatedRequest
@@ -31,6 +34,7 @@ export class Middleware {
    */
   constructor(getUserByToken: GetUserByTokenUseCase) {
     this.getUserByToken = getUserByToken;
+    
   }
 
   /**
@@ -50,7 +54,7 @@ export class Middleware {
       if (userByToken.isLeft()) {
         return response.status(401).json(userByToken.value);
       }
-
+      
       // Map user to domain
       const user = UserMapper.toDomain(userByToken.value);
       if (user.isLeft()) {
@@ -62,5 +66,19 @@ export class Middleware {
       (request as AuthenticatedRequest).user = user.value;
       next();  
     }
+  }
+
+  public checkAdmin() {
+    return async (request: Request, response: Response, next: NextFunction) => {
+
+      this.autheticated()
+
+      if ((request as AuthenticatedRequest).user.role.value !== USER_ROLES.ADMIN) {
+        return response.status(401)
+      }
+      next()
+
+    }
+
   }
 }
