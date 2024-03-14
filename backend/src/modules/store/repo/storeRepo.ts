@@ -29,9 +29,9 @@ export class StoreRepoMongo implements IStoreRepo {
         }
     }
 
-    async exists(id : string) : Promise<Either<CommonUseCaseResult.UnexpectedError, true | false>> {
+    async exists(id : UniqueGlobalId) : Promise<Either<CommonUseCaseResult.UnexpectedError, true | false>> {
         try {
-            const exists = await StoreModel.exists({_id : id})
+            const exists = await StoreModel.exists({_id : id.toValue()})
 
             if (exists === null) {
                 // Returns false if store does not exist
@@ -45,11 +45,27 @@ export class StoreRepoMongo implements IStoreRepo {
         }
     }
 
-    async getAll(): Promise<Either<CommonUseCaseResult.UnexpectedError, IStore[]>> {
+    async getAll(): Promise<Either<CommonUseCaseResult.UnexpectedError, Store[]>> {
         try {
-            const stores = await StoreModel.find()
+            const persistentStores = await StoreModel.find()
 
-            return right(stores)
+            const domainStores : Store[] = []
+
+            for (const store of persistentStores) {
+                const response = StoreMapper.toDomain(store)
+
+                if (response.isLeft()) {
+                    return left(CommonUseCaseResult.UnexpectedError.create({
+                        errorMessage: `An unexpected error happened while transforming persistent store to domain.`,
+                        variable: "GET_ALL_STORES",
+                        location: `${StoreRepoMongo.name}.GET_ALL`
+                    }))
+                }
+
+                domainStores.push(response.value)
+            }
+
+            return right(domainStores)
 
         }catch (err) {
             // Returns left if mongo throws an error

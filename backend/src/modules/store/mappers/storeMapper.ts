@@ -7,6 +7,7 @@ import { StoreAdmin } from "../domain/storeProps/storeAdmin";
 import { EitherUtils } from "../../../shared/utils/EitherUtils";
 import { SUPPORTED_PAYMENT_SERVICES } from "../../payment/services/implementations/payment_services";
 import { UniqueGlobalId } from "../../../shared/domain/UniqueGlobalD";
+import { StoreDestination } from "../domain/storeProps/storeDestinationId";
 export class StoreMapper  {
 
     public static toPersistent(store : Store) : Either<CommonUseCaseResult.UnexpectedError, IStore> {
@@ -16,7 +17,8 @@ export class StoreMapper  {
             admin : store.props.admin.value.toValue(),
             payment_method : store.props.payment_method,
             _id : store.id.toValue(),
-            name : store.props.name.value
+            name : store.props.name.value,
+            destinationId : store.props.destination_id.value.toValue()
         })
     }catch (err) {
         return left(CommonUseCaseResult.UnexpectedError.create(err))
@@ -30,9 +32,9 @@ export class StoreMapper  {
         // Create properties
         const nameOrError = StoreName.create({name : store.name})
         const adminOrError = StoreAdmin.create({admin : new UniqueGlobalId(store.admin)})
-
+        const destinationOrError = StoreDestination.create({destinationId : new UniqueGlobalId(store.destinationId)})
         // Checks if all values are valid
-        const combineResponse = EitherUtils.combine([nameOrError, adminOrError])
+        const combineResponse = EitherUtils.combine([nameOrError, adminOrError, destinationOrError])
 
         if (combineResponse.isLeft()) {
             return left(combineResponse.value)
@@ -42,6 +44,7 @@ export class StoreMapper  {
             name : nameOrError.getRight(),
             admin : adminOrError.getRight(),
             payment_method : SUPPORTED_PAYMENT_SERVICES.STRIPE,
+            destination_id : destinationOrError.getRight()
         }, new UniqueGlobalId(store._id))
         
         // Checks for error when creating domain store

@@ -7,11 +7,13 @@ import { CommonUseCaseResult } from "../../../shared/core/response/useCaseError"
 import { Guard } from "../../../shared/core/Guard";
 import { StoreName } from "./storeProps/storeName";
 import { StoreAdmin } from "./storeProps/storeAdmin";
+import { StoreDestination } from "./storeProps/storeDestinationId";
 
 export interface StoreProps {
     admin : StoreAdmin,
     payment_method : SUPPORTED_PAYMENT_SERVICES,
-    name : StoreName
+    name : StoreName,
+    destination_id : StoreDestination
 }
 
 export class Store extends AggregateRoot<StoreProps> {
@@ -25,6 +27,10 @@ export class Store extends AggregateRoot<StoreProps> {
 
     get name() : string {
         return this.props.name.value
+    }
+
+    get destination_id() : UniqueGlobalId {
+        return this.props.destination_id.value
     }
 
     /**
@@ -43,7 +49,8 @@ export class Store extends AggregateRoot<StoreProps> {
         const GuardResponse = Guard.againstNullOrUndefinedBulk([
             { argument : props.admin, argumentName: "STORE_ADMIN"}, 
             {argument : props.name, argumentName : "STORE_NAME"}, 
-            {argument : props.payment_method, argumentName : "STORE_PAYMENT_METHOD"}
+            {argument : props.payment_method, argumentName : "STORE_PAYMENT_METHOD"},
+            {argument : props.destination_id, argumentName : "STORE_DESTINATION_ID"},
         ])
             if (GuardResponse.isLeft()) {
                 return left(GuardResponse.value)

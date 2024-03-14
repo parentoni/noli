@@ -9,28 +9,26 @@ import { TextUtils } from "../../../../shared/utils/TextUtils";
 /**
  * 
  * @class StoreAdmin
- * @classdesc Store admin value object. Should handle all validation logic. 
+ * @classdesc Store destination value object. Should handle all validation logic. 
  *
  * @author Henrique Cassimiro Kitayama <henrique.kitayama2007@gmail.com>
  */
 
-export interface StoreAdminProps {
-    admin : UniqueGlobalId
+export interface StoreDestinationProps {
+    destinationId : UniqueGlobalId
 }
 
-export class StoreAdmin extends ValueObject<StoreAdminProps> {
+export class StoreDestination extends ValueObject<StoreDestinationProps> {
     get value() : UniqueGlobalId {
-        return this.props.admin
+        return this.props.destinationId
     }
 
-    public static create(props : StoreAdminProps) : Either<CommonUseCaseResult.InvalidValue, StoreAdmin> {
-        // Gets string from id
-        const stringId = GlobalIdUtils.toString(props.admin)
+    public static create(props : StoreDestinationProps) : Either<CommonUseCaseResult.InvalidValue, StoreDestination> {
         // Trims admin
-        const sanitizedAdmin = TextUtils.trim(stringId)
+        const sanitizedDestination = TextUtils.trim(props.destinationId.toValue())
 
         // Checks for empty value
-        const GuardResponse = Guard.againstNullOrUndefined(sanitizedAdmin, "STORE_ADMIN")
+        const GuardResponse = Guard.againstNullOrUndefined(sanitizedDestination, "STORE_DESTINATION")
         
         // Returns left if value is empty
 
@@ -39,7 +37,7 @@ export class StoreAdmin extends ValueObject<StoreAdminProps> {
         }
         // Returns new storename
 
-        return right(new StoreAdmin(props))
+        return right(new StoreDestination(props))
 
     }
 }
