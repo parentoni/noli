@@ -5,18 +5,20 @@ import { IStoreRepo } from "./IStoreRepo";
 import { Store } from "../domain/store";
 import { StoreModel } from "../../../shared/infra/database/models/Store";
 import { StoreMapper } from "../mappers/storeMapper";
+import { UniqueGlobalId } from "../../../shared/domain/UniqueGlobalD";
 export class StoreRepoMongo implements IStoreRepo {
-    async save(store : Store) : Promise<Either<CommonUseCaseResult.UnexpectedError, null>> {
+
+    async upsert(store : Store) : Promise<Either<CommonUseCaseResult.UnexpectedError, null>> {
         try {
             // Turns domain to persistent
             const PersistentStore = StoreMapper.toPersistent(store)
             // Checks if store already exists
-            const exists = await StoreModel.exists({_id : PersistentStore._id})
+            const exists = await StoreModel.exists({_id : PersistentStore.getRight()._id})
 
             if (exists === null) {
                 await StoreModel.create(store)
             } else {
-                await StoreModel.findOneAndUpdate({_id : PersistentStore._id}, PersistentStore)
+                await StoreModel.findOneAndUpdate({_id : PersistentStore.getRight()._id}, PersistentStore)
             }
 
             return right(null)
@@ -27,9 +29,9 @@ export class StoreRepoMongo implements IStoreRepo {
         }
     }
 
-    async exists(id : string) : Promise<Either<CommonUseCaseResult.UnexpectedError, true | false>> {
+    async exists(id : UniqueGlobalId) : Promise<Either<CommonUseCaseResult.UnexpectedError, true | false>> {
         try {
-            const exists = await StoreModel.exists({_id : id})
+            const exists = await StoreModel.exists({_id : id.toValue()})
 
             if (exists === null) {
                 // Returns false if store does not exist
@@ -42,4 +44,63 @@ export class StoreRepoMongo implements IStoreRepo {
             return left(CommonUseCaseResult.UnexpectedError.create(err))
         }
     }
+
+    async getAll(): Promise<Either<CommonUseCaseResult.UnexpectedError, Store[]>> {
+        try {
+            const persistentStores = await StoreModel.find()
+
+            const domainStores : Store[] = []
+
+            for (const store of persistentStores) {
+                const response = StoreMapper.toDomain(store)
+
+                if (response.isLeft()) {
+                    return left(CommonUseCaseResult.UnexpectedError.create({
+                        errorMessage: `An unexpected error happened while transforming persistent store to domain.`,
+                        variable: "GET_ALL_STORES",
+                        location: `${StoreRepoMongo.name}.GET_ALL`
+                    }))
+                }
+
+                domainStores.push(response.value)
+            }
+
+            return right(domainStores)
+
+        }catch (err) {
+            // Returns left if mongo throws an error
+            return left(CommonUseCaseResult.UnexpectedError.create(err))
+        }
+    }
+
+    async findById(id: UniqueGlobalId): Promise<Either<CommonUseCaseResult.UnexpectedError, Store | null>> {
+        try {
+            // Gets store
+            const store = await StoreModel.findOne({_id : id})
+            // Checks if store was found
+            if (store) {
+                // Turns store to domain
+                const storeDomain = StoreMapper.toDomain(store)
+
+                if (storeDomain.isLeft()) {
+                    return left(CommonUseCaseResult.UnexpectedError.create({
+                        errorMessage: `There was an error creating store domain`,
+                        variable: "STORE_FIND_BY_ID",
+                        location: `${StoreRepoMongo.name}.findById`
+                    }))
+                }
+                // Returns store if no errors are thrown
+                return right(storeDomain.value)
+            }
+
+            // Returns null if store could not be found but no error was thrown
+            return right(null)
+
+        }catch (err) {
+            // Returns unexpected error if mongo throws an error
+            return left(CommonUseCaseResult.UnexpectedError.create(err))
+        }
+    }
+
+
 }

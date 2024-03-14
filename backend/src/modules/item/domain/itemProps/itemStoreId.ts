@@ -18,8 +18,8 @@ export class ItemStore extends ValueObject<ItemStoreProps> {
         const stringId = GlobalIdUtils.toString(props.storeId)
         // Checks for invalid value
         const GuardResponse = Guard.againstNullOrUndefined(stringId, "ITEM_STORE_ID")
-
         if (GuardResponse.isLeft()) {
+            
             return left(GuardResponse.value)
         }
 
