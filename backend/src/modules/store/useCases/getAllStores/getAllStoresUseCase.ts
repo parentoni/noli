@@ -6,7 +6,7 @@ import { Store } from "../../domain/store";
 import { StoreMapper } from "../../mappers/storeMapper";
 import { storeRepo } from "../../repo";
 
-export class GetAllStores implements UseCase<void, Promise<Either<CommonUseCaseResult.UnexpectedError, IStore[]>>> {
+export class GetAllStoresUseCase implements UseCase<void, Promise<Either<CommonUseCaseResult.UnexpectedError, IStore[]>>> {
 
     async execute() : Promise<Either<CommonUseCaseResult.UnexpectedError, IStore[]>>{
         const persistentStores : IStore[] = []
